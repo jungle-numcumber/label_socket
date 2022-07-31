@@ -12,9 +12,9 @@ const port = process.env.PORT || 3000
 const fs = require('fs');
 const https = require('https')
 const options = {
-  ca: fs.readFileSync('/etc/letsencrypt/live/tradingstudy.shop/fullchain.pem'),
-  key: fs.readFileSync('/etc/letsencrypt/live/tradingstudy.shop/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/tradingstudy.shop/cert.pem'),
+  ca: fs.readFileSync('/etc/letsencrypt/live/tradingstudy.shop/fullchain.pem', "utf8"),
+  key: fs.readFileSync('/etc/letsencrypt/live/tradingstudy.shop/privkey.pem', "utf8"),
+  cert: fs.readFileSync('/etc/letsencrypt/live/tradingstudy.shop/cert.pem', "utf8"),
 }
 const server = https.createServer(options, app);
 const io = require('socket.io')(server);
