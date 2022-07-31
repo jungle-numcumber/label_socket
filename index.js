@@ -13,10 +13,14 @@ try {
     key: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/' + domain+ '/privkey.pem'), 'utf8').toString(),
     cert: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/' + domain+ '/cert.pem'), 'utf8').toString(),
   };
+  app.get('/test', (req, res) => {
+    res.send('hello test');
+  })
 
   HTTPS.createServer(option, app).listen(sslport, () => {
     console.log('[HTTPS] Server is started on port 443');
   });
+
 } catch (error) {
   console.log('[HTTPS] Server is not Active. Please Check Your Server');
   console.log(error);
