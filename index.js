@@ -8,23 +8,30 @@ const path = require('path');
 const HTTPS = require('https');
 const dbFind = require('./src/model/testModel').dbFind
 const dbSearch = require('./src/model/testModel').dbSearch
-
+const option = {
+  ca: fs.readFileSync('/etc/letsencrypt/live/' + domain+ '/fullchain.pem'),
+  key: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/' + domain+ '/privkey.pem'), 'utf8').toString(),
+  cert: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/' + domain+ '/cert.pem'), 'utf8').toString(),
+};
 const domain = 'tradingstudy.shop' // TODO : 구매한 도메인을 기재한다.
 
 const sslport = process.env.PORT || 443;
-let server
-try {
-  const option = {
-    ca: fs.readFileSync('/etc/letsencrypt/live/' + domain+ '/fullchain.pem'),
-    key: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/' + domain+ '/privkey.pem'), 'utf8').toString(),
-    cert: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/' + domain+ '/cert.pem'), 'utf8').toString(),
-  };
-  server = HTTPS.createServer(option, app);
+const server = HTTPS.createServer(option, app);
+server.listen(sslport, () => {
+  console.log('[HTTPS] Server is started on port 443');
+});
+// try {
+//   const option = {
+//     ca: fs.readFileSync('/etc/letsencrypt/live/' + domain+ '/fullchain.pem'),
+//     key: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/' + domain+ '/privkey.pem'), 'utf8').toString(),
+//     cert: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/' + domain+ '/cert.pem'), 'utf8').toString(),
+//   };
+//   server = HTTPS.createServer(option, app);
 
-} catch (error) {
-  console.log('[HTTPS] Server is not Active. Please Check Your Server');
-  console.log(error);
-}
+// } catch (error) {
+//   console.log('[HTTPS] Server is not Active. Please Check Your Server');
+//   console.log(error);
+// }
 
 const io = require('socket.io')(server, {});
 app.get('/test', (req, res) => {
@@ -63,9 +70,6 @@ io.on('connection', async (socket) => {
 });
 })
 
-  server.listen(sslport, () => {
-    console.log('[HTTPS] Server is started on port 443');
-  });
 
 
 // // #!/usr/bin/env node
