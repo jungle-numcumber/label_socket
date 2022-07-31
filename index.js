@@ -8,12 +8,12 @@ const path = require('path');
 const HTTPS = require('https');
 const dbFind = require('./src/model/testModel').dbFind
 const dbSearch = require('./src/model/testModel').dbSearch
+const domain = 'tradingstudy.shop' // TODO : 구매한 도메인을 기재한다.
 const option = {
   ca: fs.readFileSync('/etc/letsencrypt/live/' + domain+ '/fullchain.pem'),
   key: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/' + domain+ '/privkey.pem'), 'utf8').toString(),
   cert: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/' + domain+ '/cert.pem'), 'utf8').toString(),
 };
-const domain = 'tradingstudy.shop' // TODO : 구매한 도메인을 기재한다.
 
 const sslport = process.env.PORT || 443;
 const server = HTTPS.createServer(option, app);
