@@ -21,11 +21,11 @@ app.use(methodOverride());
 app.use(express.urlencoded({extended: true}));
 // 모든 도메인에서 나의 서버에게 요청을 보낼 수 있게 해줌
 app.use(cors());
-app.get('/', (res) => {
-  return res.json({message: 'hello'})
+app.get('/', (req, res) => {
+  res.send('hello world');
 })
-app.get('/test', (res) => {
-  return res.json({message: 'test'})
+app.get('/test', (req, res) => {
+  res.send('hello test');
 })
 // editor room websocket connection
 // 클라이언트로부터 connection 이벤트를 받는다. 
