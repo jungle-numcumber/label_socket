@@ -12,14 +12,14 @@ const dbSearch = require('./src/model/testModel').dbSearch
 const domain = 'tradingstudy.shop' // TODO : 구매한 도메인을 기재한다.
 
 const sslport = process.env.PORT || 443;
-
+let server
 try {
   const option = {
     ca: fs.readFileSync('/etc/letsencrypt/live/' + domain+ '/fullchain.pem'),
     key: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/' + domain+ '/privkey.pem'), 'utf8').toString(),
     cert: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/' + domain+ '/cert.pem'), 'utf8').toString(),
   };
-  const server = HTTPS.createServer(option, app);
+  server = HTTPS.createServer(option, app);
 
 } catch (error) {
   console.log('[HTTPS] Server is not Active. Please Check Your Server');
