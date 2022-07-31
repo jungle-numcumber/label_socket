@@ -51,19 +51,19 @@ const io = require('socket.io')(server, {});
 // ** handshake가 완료되면 emitted 된다.
 io.on('connection', async (socket) => {
   console.log('user connected');
-  // let result = await dbSearch(socket.request._query.userId, socket.request._query.pdfId);
-  // let defaultPage = ""
-  // if (result !== null) {
-  //   console.log('result?',result['text'])
-  //   defaultPage = result['text'];
-  // }
+  let result = await dbSearch(socket.request._query.userId, socket.request._query.pdfId);
+  let defaultPage = ""
+  if (result !== null) {
+    console.log('result?',result['text'])
+    defaultPage = result['text'];
+  }
 
-  // io.emit('updateEditorOnce', defaultPage, ()=>{
-  //   socket.on('updateEditor', (value) => {
-  //     dbFind(value);
-  //     console.log(value.text);
-  //   });
-  // });
+  io.emit('updateEditorOnce', defaultPage, ()=>{
+    socket.on('updateEditor', (value) => {
+      dbFind(value);
+      console.log(value.text);
+    });
+  });
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
