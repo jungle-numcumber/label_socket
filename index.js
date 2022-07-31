@@ -1,6 +1,9 @@
 // #!/usr/bin/env node
-const app = express();
 const express = require('express');
+const compression = require('compression');
+const methodOverride = require('method-override');
+const cors = require('cors');
+const app = express();
 // const express = require('./config/express')
 const dbFind = require('./src/model/testModel').dbFind
 const dbSearch = require('./src/model/testModel').dbSearch
