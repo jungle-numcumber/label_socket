@@ -17,6 +17,7 @@ const option = {
 
 app.get('/test', (req, res) => {
   res.send('hello test');
+})
 // 미들웨어 압축, 파일 용량 줄임
 app.use(compression());
 app.use(express.json());
@@ -68,7 +69,6 @@ io.on('connection', async (socket) => {
     console.log('user disconnected');
   });
 });
-})
 
 server.listen(sslport, () => {
   console.log('[HTTPS] Server is started on port 443');
