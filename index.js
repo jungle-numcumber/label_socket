@@ -37,7 +37,8 @@ try {
   // ** handshake가 완료되면 emitted 된다.
   io.on('connection', async (socket) => {
     console.log('user connected');
-    let result = await dbSearch(socket.request._query.userId, socket.request._query.pdfId);
+    
+    // let result = await dbSearch(socket.request._query.userId, socket.request._query.pdfId);
     let defaultPage = ""
     if (result !== null) {
       console.log('result?',result['text'])
@@ -46,7 +47,7 @@ try {
 
     io.emit('updateEditorOnce', defaultPage, ()=>{
       socket.on('updateEditor', (value) => {
-        dbFind(value);
+        // dbFind(value);
         console.log(value.text);
       });
     });
