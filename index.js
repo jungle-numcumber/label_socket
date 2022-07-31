@@ -6,6 +6,8 @@ const app = express();
 const fs = require('fs');
 const path = require('path');
 const HTTPS = require('https');
+const dbFind = require('./src/model/testModel').dbFind
+const dbSearch = require('./src/model/testModel').dbSearch
 
 const domain = 'tradingstudy.shop' // TODO : 구매한 도메인을 기재한다.
 
