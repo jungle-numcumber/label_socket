@@ -1,5 +1,5 @@
 // const { pool } = require("../../config/database");
-// const mongoose = require('mongoose');
+const { connection } = require('mongoose');
 const Client = require('mongodb').MongoClient;
 var url = 'mongodb://localhost:27017/editors'
   
@@ -23,6 +23,14 @@ function dbFind(value) {
   })
 }
 
+async function dbSearch(id, pdfId) {
+  let conn = await Client.connect(url);
+  let db = conn.db('editors');
+  let result = await db.collection('editor').findOne({id: id, pdfId: pdfId});
+  await conn.close();
+  return result;
+}
+
 function dbUpdate(id, pdfId, text) {
   Client.connect(url, async function(err, database) {
     if (err) throw err;
@@ -43,6 +51,7 @@ function dbInsert(id, pdfId, text) {
 
 module.exports = {
     dbFind,
+    dbSearch
 }
 
 // async await 적용 실패사례
@@ -60,8 +69,8 @@ module.exports = {
   //   })
   // }
 
-// function dbCreate(id, value) {
-//     Client.connect(url, function(err, database) {
+// async function dbCreate(id, value) {
+//     let a = await Client.connect(url, function(err, database) {
 //       if (err) throw err;
 //       if (dbFind(value.id, value.pdfId)) {
 //         dbUpdate(value.id, value.pdfId, value.text);

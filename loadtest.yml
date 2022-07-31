@@ -1,0 +1,39 @@
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 60
+      arrivalRate: 10
+  engines:
+   socketio-v3: {}
+
+scenarios:
+  - name: My sample scenario
+    engine: socketio-v3
+    flow:
+      # wait for the WebSocket upgrade (optional)
+      - think: 1
+      # - get:
+      #   url: "/milkdown"
+      # - emit:
+      #     channel: "updateEditor"
+      #     data:
+      #       id: "parksunggeun-{{ $randomString() }}"
+      #       pdfId: "parksunggeun-{{ $randomString() }}"
+      #       text: "what?"
+      # basic emit
+      - emit:
+          channel: "updateEditor"
+          data:
+            id: "parksunggeun-{{ $randomString() }}"
+            pdfId: "parksunggeun-{{ $randomString() }}"
+            text: "what?{{ $randomString() }}"
+
+      # 사진이나 텍스트가 아닌 데이터를 보내보자.
+      # - emit:
+      #     channel: "ping"
+      #   acknowledge:
+      #     match:
+      #       value: "pong"
+
+      # do nothing for 30 seconds then disconnect
+      - think: 30
