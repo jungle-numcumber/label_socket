@@ -1,6 +1,7 @@
 // #!/usr/bin/env node
 const app = express();
-const express = require('./config/express')
+const express = require('express');
+// const express = require('./config/express')
 const dbFind = require('./src/model/testModel').dbFind
 const dbSearch = require('./src/model/testModel').dbSearch
 const port = process.env.PORT || 3000
