@@ -8,7 +8,15 @@ const app = express();
 const dbFind = require('./src/model/testModel').dbFind
 const dbSearch = require('./src/model/testModel').dbSearch
 const port = process.env.PORT || 3000
-const server = require('http').createServer(app);
+// const server = require('http').createServer(app);
+const fs = require('fs');
+const https = require('https')
+const options = {
+  ca: fs.readFileSync('/etc/letsencrypt/live/tradingstudy.shop/fullchain.pem'),
+  key: fs.readFileSync('/etc/letsencrypt/live/tradingstudy.shop/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/tradingstudy.shop/cert.pem'),
+}
+const server = https.createServer(options, app);
 const io = require('socket.io')(server);
 console.log(`${process.env.NODE_ENV} - API Server Start At Port ${port}`);
 
