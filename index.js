@@ -18,7 +18,7 @@ try {
     cert: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/' + domain+ '/cert.pem'), 'utf8').toString(),
   };
   const server = HTTPS.createServer(option, app);
-  const io = require('socket.io')(server);
+  const io = require('socket.io')(server, {});
   app.get('/test', (req, res) => {
     res.send('hello test');
   // 미들웨어 압축, 파일 용량 줄임
