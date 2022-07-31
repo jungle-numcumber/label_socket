@@ -6,6 +6,7 @@ var url = 'mongodb://localhost:27017/editors'
 function dbFind(value) {
   Client.connect(url, async function(err, database) {
     if (err) throw err;
+    console.log('dbFind')
     let db = database.db('editors');
     let result = db.collection('editor').findOne({id: value.id, pdfId: value.pdfId});
     return Promise.all([result])
@@ -34,6 +35,7 @@ async function dbSearch(id, pdfId) {
 function dbUpdate(id, pdfId, text) {
   Client.connect(url, async function(err, database) {
     if (err) throw err;
+    console.log('dbUpdate')
     let db = database.db('editors');
     let result = db.collection('editor').updateOne({id: id, pdfId: pdfId}, {$set: {text: text}});
     return result;
@@ -43,6 +45,7 @@ function dbUpdate(id, pdfId, text) {
 function dbInsert(id, pdfId, text) {
   Client.connect(url, async function(err, database) {
     if (err) throw err;
+    console.log('dbInsert')
     let db = database.db('editors');
     result = db.collection('editor').insertOne({id: id, pdfId: pdfId, text: text});
     return result;
