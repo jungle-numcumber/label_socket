@@ -1,7 +1,7 @@
 // const { pool } = require("../../config/database");
 const { connection } = require('mongoose');
 const Client = require('mongodb').MongoClient;
-var url = 'mongodb://localhost:27017/editors'
+var url = 'mongodb://label:newcumber@localhost:27017'
   
 function dbFind(value) {
   Client.connect(url, async function(err, database) {

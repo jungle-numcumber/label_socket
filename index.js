@@ -35,17 +35,24 @@ app.use(express.urlencoded({extended: true}));
 app.use(cors());
 
 async function getSingedUrl(req, res) {
-  console.log(process.env.BUCKET_REGION)
+  AWS.config.update({
+	accessKeyId: process.env.ACCESS_KEY,
+	secretAccessKey: process.env.SECRET_ACCESS_KEY,
+	region: 'ap-northeast-2'
+  });
   const s3 = new AWS.S3({
+      signatureVersion: 'v4',
       accessKeyID: process.env.ACCESS_KEY,
       secretAccessKey: process.env.SECRET_ACCESS_KEY,
-      region: process.env.BUCKET_REGION
+      region: "ap-northeast-2"
   },
   )
   const params = {
-      Bucket: process.env.S3_BUCKET,
+      Bucket: 'label-editor',
       Key: req.body.fileName,
-      // Key: "test"
+      Expires: 60 * 60 * 6,
+      ContentType: 'image/png',
+      ACL: 'public-read'
   }
   
   const signedUrlPut = await s3.getSignedUrlPromise("putObject", params)
