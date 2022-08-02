@@ -6,9 +6,15 @@ const app = express();
 const fs = require('fs');
 const path = require('path');
 const HTTPS = require('https');
+const AWS = require('aws-sdk');
+const {S3Client, GetObjectCommand} = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const dotenv = require('dotenv')
 const dbFind = require('./src/model/testModel').dbFind
 const dbSearch = require('./src/model/testModel').dbSearch
 const domain = 'tradingstudy.shop' // TODO : 구매한 도메인을 기재한다.
+
+dotenv.config()
 const option = {
   ca: fs.readFileSync('/etc/letsencrypt/live/' + domain+ '/fullchain.pem'),
   key: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/' + domain+ '/privkey.pem'), 'utf8').toString(),
@@ -28,22 +34,28 @@ app.use(express.urlencoded({extended: true}));
 // 모든 도메인에서 나의 서버에게 요청을 보낼 수 있게 해줌
 app.use(cors());
 
+async function getSingedUrl(req, res) {
+  console.log(process.env.BUCKET_REGION)
+  const s3 = new AWS.S3({
+      accessKeyID: process.env.ACCESS_KEY,
+      secretAccessKey: process.env.SECRET_ACCESS_KEY,
+      region: process.env.BUCKET_REGION
+  },
+  )
+  const params = {
+      Bucket: process.env.S3_BUCKET,
+      Key: req.body.fileName,
+      // Key: "test"
+  }
+  
+  const signedUrlPut = await s3.getSignedUrlPromise("putObject", params)
+  console.log("S3 pre signed url: ",signedUrlPut);
+  await res.json({signedUrlPut,})
+};
+
+app.post('/users/sign', getSingedUrl);
 const sslport = process.env.PORT || 443;
 const server = HTTPS.createServer(option, app);
-
-// try {
-//   const option = {
-//     ca: fs.readFileSync('/etc/letsencrypt/live/' + domain+ '/fullchain.pem'),
-//     key: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/' + domain+ '/privkey.pem'), 'utf8').toString(),
-//     cert: fs.readFileSync(path.resolve(process.cwd(), '/etc/letsencrypt/live/' + domain+ '/cert.pem'), 'utf8').toString(),
-//   };
-//   server = HTTPS.createServer(option, app);
-
-// } catch (error) {
-//   console.log('[HTTPS] Server is not Active. Please Check Your Server');
-//   console.log(error);
-// }
-
 const io = require('socket.io')(server, {});
 
 // editor room websocket connection
