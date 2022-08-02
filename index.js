@@ -56,7 +56,7 @@ async function getSingedUrl(req, res) {
   }
   
   const signedUrlPut = await s3.getSignedUrlPromise("putObject", params)
-  console.log("S3 pre signed url: ",signedUrlPut);
+  //console.log("S3 pre signed url: ",signedUrlPut);
   await res.json({signedUrlPut,})
 };
 
@@ -73,14 +73,14 @@ io.on('connection', async (socket) => {
   let result = await dbSearch(socket.request._query.userId, socket.request._query.pdfId);
   let defaultPage = ""
   if (result !== null) {
-    console.log('result?',result['text'])
+   // console.log('result?',result['text'])
     defaultPage = result['text'];
   }
 
   io.emit('updateEditorOnce', defaultPage, ()=>{
     socket.on('updateEditor', (value) => {
       dbFind(value);
-      console.log(value.text);
+     // console.log(value.text);
     });
   });
 
