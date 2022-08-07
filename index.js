@@ -69,7 +69,8 @@ const io = require('socket.io')(server, {});
 // 클라이언트로부터 connection 이벤트를 받는다. 
 // ** handshake가 완료되면 emitted 된다.
 io.on('connection', async (socket) => {
-  console.log('user connected');
+  let now = new Date();
+  console.log('user connected', socket.id, ' at ', now);
   let result = await dbSearch(socket.request._query.userId, socket.request._query.pdfId);
   let defaultPage = ""
   if (result !== null) {
@@ -85,7 +86,8 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    let now = new Date();
+    console.log('user disconnected : ', socket.id, ' at ', now);
   });
 });
 
