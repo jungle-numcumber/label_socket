@@ -9,7 +9,7 @@ import dotenv from 'dotenv';
 import { ENCRYPT_URL } from '../constants/constant';
 // eslint-disable-next-line import/namespace
 import { findDefaultPage, updateEditor, getSingedUrl } from '../controllers/socketController';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { EditorInterface } from '../interfaces/editorInterface';
 
 dotenv.config();
@@ -36,18 +36,25 @@ export const server = HTTPS.createServer(
 
 const io = new Server(server, {});
 
-io.on('connection', async (socket) => {
+io.on('connection', async (socket: Socket) => {
   const query = socket.handshake.query!;
   const defaultPage = await findDefaultPage(query.userId, query.pdfId);
 
+  doEmitUpdateEditorOnceEvent(socket, defaultPage);
+  doDisconnectEvent(socket);
+});
+
+function doEmitUpdateEditorOnceEvent(socket: Socket, defaultPage: string): void {
   io.emit('updateEditorOnce', defaultPage, () => {
     socket.on('updateEditor', async (value: EditorInterface) => {
       await updateEditor(value);
     });
   });
+}
 
+function doDisconnectEvent(socket: Socket): void {
   socket.on('disconnect', () => {
     // eslint-disable-next-line no-console
     console.log('user disconnected : ', socket.id, ' at ', new Date());
   });
-});
+}
